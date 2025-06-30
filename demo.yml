@@ -1,0 +1,165 @@
+name: demo
+
+topology:
+  nodes:
+    A:
+      kind: linux
+      image: kit25-demo:lec3
+      binds: 
+        - common/daemons:/etc/frr/daemons
+        - common/vtysh.conf:/etc/frr/vtysh.conf
+        - ospf/A/frr.conf:/etc/frr/frr.conf
+      exec: 
+        - service frr start
+    B:
+      kind: linux
+      image: kit25-demo:lec3
+      binds:
+        - common/daemons:/etc/frr/daemons
+        - common/vtysh.conf:/etc/frr/vtysh.conf
+        - ospf/B/frr.conf:/etc/frr/frr.conf
+      exec:
+        - service frr start
+    C:
+      kind: linux
+      image: kit25-demo:lec3
+      binds:
+        - common/daemons:/etc/frr/daemons
+        - common/vtysh.conf:/etc/frr/vtysh.conf
+        - ospf/C/frr.conf:/etc/frr/frr.conf
+      exec:
+        - service frr start
+    D:
+      kind: linux
+      image: kit25-demo:lec3
+      binds:
+        - common/daemons:/etc/frr/daemons
+        - common/vtysh.conf:/etc/frr/vtysh.conf
+        - ospf/D/frr.conf:/etc/frr/frr.conf
+      exec:
+        - service frr start
+    F:
+      kind: linux
+      image: kit25-demo:lec3
+      binds:
+        - common/daemons:/etc/frr/daemons
+        - common/vtysh.conf:/etc/frr/vtysh.conf
+        - ospf/F/frr.conf:/etc/frr/frr.conf
+      exec:
+        - service frr start
+    G:
+      kind: linux
+      image: kit25-demo:lec3
+      binds:
+        - common/daemons:/etc/frr/daemons
+        - common/vtysh.conf:/etc/frr/vtysh.conf
+        - ospf/G/frr.conf:/etc/frr/frr.conf
+      exec:
+        - service frr start
+    Gandalf:
+      kind: linux
+      image: kit25-demo:lec3
+      binds:
+        - common/daemons:/etc/frr/daemons
+        - common/vtysh.conf:/etc/frr/vtysh.conf
+        - static/Gandalf/frr.conf:/etc/frr/frr.conf
+      exec:
+        - service frr start
+    Frodo:
+      kind: linux
+      image: kit25-demo:lec3
+      binds:
+        - common/daemons:/etc/frr/daemons
+        - common/vtysh.conf:/etc/frr/vtysh.conf
+        - static/Frodo/frr.conf:/etc/frr/frr.conf
+      exec:
+        - service frr start
+    Sam:
+      kind: linux
+      image: kit25-demo:lec3
+      binds:
+        - common/daemons:/etc/frr/daemons
+        - common/vtysh.conf:/etc/frr/vtysh.conf
+        - static/Sam/frr.conf:/etc/frr/frr.conf
+      exec:
+        - service frr start
+    R1:
+      kind: linux
+      image: kit25-demo:lec3
+      binds:
+        - common/daemons:/etc/frr/daemons
+        - common/vtysh.conf:/etc/frr/vtysh.conf
+        - rip/R1/frr.conf:/etc/frr/frr.conf
+      exec:
+        - service frr start
+    R2:
+      kind: linux
+      image: kit25-demo:lec3
+      binds:
+        - common/daemons:/etc/frr/daemons
+        - common/vtysh.conf:/etc/frr/vtysh.conf
+        - rip/R2/frr.conf:/etc/frr/frr.conf
+      exec:
+        - service frr start
+    R3:
+      kind: linux
+      image: kit25-demo:lec3
+      binds:
+        - common/daemons:/etc/frr/daemons
+        - common/vtysh.conf:/etc/frr/vtysh.conf
+        - rip/R3/frr.conf:/etc/frr/frr.conf
+      exec:
+        - service frr start
+
+    host1:
+      kind: linux
+      image: alpine:latest
+      exec:
+        - ip addr add 192.168.1.1/24 dev eth2
+        - ip link set eth2 up
+        - ip route add 192.168.0.0/16 via 192.168.1.254 dev eth2
+    host4:
+      kind: linux
+      image: alpine:latest
+      exec:
+        - ip addr add 192.168.4.1/24 dev eth2
+        - ip link set eth2 up
+        - ip route add 192.168.0.0/16 via 192.168.4.254 dev eth2
+    host2:
+      kind: linux
+      image: alpine:latest
+      exec:
+        - ip addr add 192.168.2.1/24 dev eth2
+        - ip link set eth2 up
+        - ip route add 192.168.0.0/16 via 192.168.2.254 dev eth2
+    host3:
+      kind: linux
+      image: alpine:latest
+      exec:
+        - ip addr add 192.168.3.1/24 dev eth2
+        - ip link set eth2 up
+        - ip route add 192.168.0.0/16 via 192.168.3.254 dev eth2
+
+  links:
+    - endpoints: ["A:eth1","B:eth1"]
+    - endpoints: ["B:eth2","D:eth1"]
+    - endpoints: ["B:eth3","F:eth1"]
+    - endpoints: ["C:eth1","D:eth2"]
+    - endpoints: ["C:eth3","G:eth1"]
+    - endpoints: ["D:eth3","F:eth2"]
+    - endpoints: ["D:eth4","G:eth2"]
+    - endpoints: ["Gandalf:eth3","F:eth3"]
+    - endpoints: ["Gandalf:eth1","Frodo:eth1"]
+    - endpoints: ["Gandalf:eth2","Sam:eth1"]
+    - endpoints: ["Frodo:eth3","Sam:eth3"]
+    - endpoints: ["R1:eth3","G:eth3"]
+    - endpoints: ["R1:eth4","F:eth4"]
+    - endpoints: ["R1:eth1","R2:eth1"]
+    - endpoints: ["R1:eth2","R3:eth1"]
+    - endpoints: ["R1:eth5","Gandalf:eth5"]
+    - endpoints: ["R2:eth3","R3:eth3"]
+    - endpoints: ["A:eth2","host1:eth2"]
+    - endpoints: ["C:eth2","host4:eth2"]
+    - endpoints: ["Frodo:eth2","host2:eth2"]
+    - endpoints: ["R3:eth2","host3:eth2"]
+    - endpoints: ["Frodo:eth4","host3:eth4"]
